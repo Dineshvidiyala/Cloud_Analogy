@@ -1,50 +1,49 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
-interface NavbarProps {
-  currentPage: string;
-  onPageChange: (page: string) => void;
-}
+const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
-const Navbar: React.FC<NavbarProps> = ({ currentPage, onPageChange }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const menuItems = [
-    { name: 'Home', id: 'home' },
-    { name: 'Wedding', id: 'wedding' },
-    { name: 'Baby Shoot', id: 'baby-shoot' },
-    { name: 'Model Shoots', id: 'model-shoots' },
-    { name: 'Contact Us', id: 'contact' },
+  const navigation = [
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/about' },
+    { name: 'Services', href: '/services' },
+    { name: 'Contact', href: '/contact' },
+    { name: 'Blog', href: '/blog' },
   ];
 
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
+
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm shadow-sm z-50">
+    <nav className="bg-white shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex-shrink-0 cursor-pointer" onClick={() => onPageChange('home')}>
-            <img
-              src="/public/WhatsApp Image 2025-08-03 at 11.26.40_73a56a2d.jpg"
-              alt="UV Shutters Photography"
-              className="h-12 w-auto object-contain"
-            />
+          <div className="flex-shrink-0">
+            <Link to="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
+              CloudAnalogy
+            </Link>
           </div>
 
-          {/* Desktop Menu */}
+          {/* Desktop Navigation */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => onPageChange(item.id)}
-                  className={`px-3 py-2 text-sm font-medium transition-colors duration-200 ${
-                    currentPage === item.id
-                      ? 'text-black border-b-2 border-black'
-                      : 'text-gray-600 hover:text-black hover:border-b-2 hover:border-gray-300'
+            <div className="ml-10 flex items-baseline space-x-4">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    isActive(item.href)
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
                   }`}
                 >
                   {item.name}
-                </button>
+                </Link>
               ))}
             </div>
           </div>
@@ -52,33 +51,31 @@ const Navbar: React.FC<NavbarProps> = ({ currentPage, onPageChange }) => {
           {/* Mobile menu button */}
           <div className="md:hidden">
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-600 hover:text-black transition-colors duration-200"
+              onClick={() => setIsOpen(!isOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
+        {/* Mobile Navigation */}
+        {isOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
-              {menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    onPageChange(item.id);
-                    setIsMenuOpen(false);
-                  }}
-                  className={`block w-full text-left px-3 py-2 text-base font-medium transition-colors duration-200 ${
-                    currentPage === item.id
-                      ? 'text-black bg-gray-50'
-                      : 'text-gray-600 hover:text-black hover:bg-gray-50'
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50 border-t border-gray-200">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                    isActive(item.href)
+                      ? 'bg-blue-100 text-blue-700'
+                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
                   }`}
                 >
                   {item.name}
-                </button>
+                </Link>
               ))}
             </div>
           </div>

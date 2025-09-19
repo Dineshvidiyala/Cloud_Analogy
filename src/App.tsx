@@ -1,34 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import HomePage from './components/HomePage';
-import WeddingPage from './components/WeddingPage';
-import BabyShootPage from './components/BabyShootPage';
-import ModelShootsPage from './components/ModelShootsPage';
-import ContactPage from './components/ContactPage';
+import Footer from './components/Footer';
+import Home from './pages/Home';
+import About from './pages/About';
+import Services from './pages/Services';
+import Contact from './pages/Contact';
+import Blog from './pages/Blog';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home');
-
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'wedding':
-        return <WeddingPage />;
-      case 'baby-shoot':
-        return <BabyShootPage />;
-      case 'model-shoots':
-        return <ModelShootsPage />;
-      case 'contact':
-        return <ContactPage />;
-      default:
-        return <HomePage onPageChange={setCurrentPage} />;
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar currentPage={currentPage} onPageChange={setCurrentPage} />
-      {renderPage()}
-    </div>
+    <Router>
+      <div className="min-h-screen bg-white flex flex-col">
+        <Navbar />
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/blog" element={<Blog />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
